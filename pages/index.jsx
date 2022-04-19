@@ -1,7 +1,6 @@
 import Nav from "../components/nav.jsx";
 import Countdown from "../components/countdown.jsx";
-import ReadyComputingPower from "../components/ready-computing-power.jsx";
-import NodesTable from "../components/nodes-table.jsx";
+import Main from "../components/main.jsx";
 import StatusMap from "../components/status-map.jsx";
 import FAQ from "../components/faq.jsx";
 import { fetchTip } from "./api/tip.js";
@@ -21,10 +20,7 @@ export default function Home({
       <section className="px-2">
         <Countdown targetEpoch={targetEpoch} tip={tip} />
 
-        <div className="shadow-lg rounded-2xl bg-white max-w-screen-xl m-auto p-8 mb-20">
-          <ReadyComputingPower minerVersions={minerVersions} />
-          <NodesTable nodes={nodes} />
-        </div>
+        <Main minerVersions={minerVersions} nodes={nodes} />
 
         <div className="max-w-screen-xl m-auto mb-20 grid grid-cols-2 gap-0 sm:gap-8 md:gap-16">
           <StatusMap statusMap={statusMap} />
