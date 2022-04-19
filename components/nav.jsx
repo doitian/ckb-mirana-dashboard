@@ -26,14 +26,16 @@ export default function Nav({ menu }) {
   return (
     <nav className="bg-[#232323] px-2 sm:px-4 py-2.5">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
-        <a href="/" className="flex items-center">
-          <Image
-            height="36px"
-            width="36px"
-            src="/logo.svg"
-            alt="Nervos Logo"
-          />
-        </a>
+        <Link href="/">
+          <a className="flex items-center">
+            <Image
+              height="36px"
+              width="36px"
+              src="/logo.svg"
+              alt="Nervos Logo"
+            />
+          </a>
+        </Link>
         <MenuItems menu={menu} />
       </div>
     </nav>
