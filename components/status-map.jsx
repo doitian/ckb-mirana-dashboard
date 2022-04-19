@@ -6,7 +6,7 @@ const STATUS_BG = {
 
 function Section({ section }) {
   return (
-    <div key={section.title} className="col-span-2 sm:col-span-1 mb-16">
+    <div className="col-span-2 sm:col-span-1 mb-16">
       <h2 className="text-2xl text-slate-500 mb-4">{section.title}</h2>
       <table className="shadow-lg rounded-2xl bg-white p-8 table-auto w-full text-center">
         <thead>
@@ -32,7 +32,7 @@ export default function StatusMap({ statusMap }) {
   return (
     <>
       {statusMap.map((section) => (
-        <Section section={section} />
+        <Section key={section.title} section={section} />
       ))}
     </>
   );
