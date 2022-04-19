@@ -65,7 +65,7 @@ const CELL_STYLES = "p-3";
 function BlockCell({ hash, isBest }) {
   if (hash !== undefined && hash !== null) {
     const bg = isBest ? "bg-[#00CC9BE6]" : "bg-[#FF5E5EE6]";
-    return <td className={`${bg} text-white ${CELL_STYLES}`}>{hash}</td>;
+    return <td className={`${bg} text-white border border-white ${CELL_STYLES}`}>{hash}</td>;
   }
 
   return <td className={CELL_STYLES}>&nbsp;</td>;
@@ -75,7 +75,7 @@ export default function NodesTable({ nodes: { lastNumber, nodes } }) {
   const best = findBestChain(nodes);
 
   return (
-    <table className="table-auto border-separate text-center w-full">
+    <table className="table-auto text-center w-full">
       <thead>
         <tr>
           <th className={CELL_STYLES}>Node \ Height</th>
@@ -89,7 +89,7 @@ export default function NodesTable({ nodes: { lastNumber, nodes } }) {
       <tbody>
         {nodes.map((node) => (
           <tr key={node.name}>
-            <th className={CELL_STYLES}>{node.name}</th>
+            <th className={`${CELL_STYLES} border-t border-slate-100`}>{node.name}</th>
             <BlockCell
               hash={node.blocks[0]}
               isBest={node.blocks[0] == best.blocks[0]}
