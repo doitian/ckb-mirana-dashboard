@@ -6,7 +6,7 @@ function MenuItems({ menu }) {
     <div className="justify-between items-center w-full flex w-auto order-1">
       <ul className="flex mt-4 flex-row space-x-4 mt-0">
         {menu.map((item) => (
-          <li>
+          <li key={item.href}>
             <Link href={item.href}>
               <a
                 className="block py-2 pr-4 pl-3 text-white rounded"
