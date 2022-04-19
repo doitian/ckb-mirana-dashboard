@@ -57,8 +57,8 @@ export default function Countdown({ tip }) {
     calculateTimeLeft(new Date(tip.fetchTime), tip)
   );
 
-  if (timeLeft.milliseconds > 0) {
-    useEffect(() => {
+  useEffect(() => {
+    if (timeLeft.milliseconds > 0) {
       const timer = setTimeout(() => {
         setTimeLeft(calculateTimeLeft(new Date(), tip));
       }, 1000);
@@ -66,8 +66,10 @@ export default function Countdown({ tip }) {
       return function clearTimer() {
         clearTimeout(timer);
       };
-    });
+    }
+  });
 
+  if (timeLeft.milliseconds > 0) {
     return (
       <Root title="CKB Mirana Upgrade Countdown">
         <Details timeLeft={timeLeft} />
