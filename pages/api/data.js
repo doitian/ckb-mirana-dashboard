@@ -42,7 +42,7 @@ function isVersionReady(version) {
   return false;
 }
 
-async function fetchNodes() {
+export async function fetchNodes() {
   const params = new URLSearchParams({
     query: QUERY_NODES,
   });
@@ -85,7 +85,7 @@ async function fetchNodes() {
   };
 }
 
-async function fetchMinerVersions() {
+export async function fetchMinerVersions() {
   const now = new Date();
   const nowTimestamp = +now;
   // Round to 4 hours
@@ -147,9 +147,9 @@ async function fetchMinerVersions() {
 // P_USERNAME: prometheus username
 // P_PASSWORD: prometheus password
 export default async function handler(req, res) {
+  const nodes = await fetchNodes();
+  const minerVersions = await fetchMinerVersions();
+
   res.setHeader("Cache-Control", "s-maxage=10, stale-while-revalidate=60");
-  res.status(200).json({
-    nodes: await fetchNodes(),
-    minerVersions: await fetchMinerVersions(),
-  });
+  res.status(200).json({ nodes, minerVersions });
 }
