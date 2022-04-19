@@ -59,7 +59,7 @@ export async function getServerSideProps(context) {
       statusMap: [
         {
           title: "Infrastructure Providers",
-          header: "Exchange",
+          header: "Provider",
           data: [{ name: "Explorer", status: "Ready" }],
         },
       ],
