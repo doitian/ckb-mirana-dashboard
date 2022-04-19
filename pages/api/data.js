@@ -26,7 +26,9 @@ const QUERY_MINER_VERSIONS =
   'count_over_time(Node_Get_client_version{job="ckb", NodePort="8124",NodeIP="47.110.15.57"}[4h])';
 
 function basicAuth() {
-  return btoa(`${process.env.P_USERNAME}:${process.env.P_PASSWORD}`);
+  return Buffer.from(
+    `${process.env.P_USERNAME}:${process.env.P_PASSWORD}`
+  ).toString("base64");
 }
 
 function isVersionReady(version) {
@@ -57,7 +59,9 @@ export async function fetchNodes() {
     throw new Exception(`${respData.errorType}: ${respData.error}`);
   }
 
-  const lastNumber = Math.max(...respData.data.result.map(e => parseInt(e.metric.last_blocknumber, 10)));
+  const lastNumber = Math.max(
+    ...respData.data.result.map((e) => parseInt(e.metric.last_blocknumber, 10))
+  );
 
   const nodesMap = new Map();
   for (const entry of respData.data.result) {
