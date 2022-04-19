@@ -5,7 +5,9 @@ export default function Home({ menu, tip }) {
   return (
     <>
       <Nav menu={menu} />
-      <Countdown tip={tip} />
+      <section className="px-2">
+        <Countdown tip={tip} />
+      </section>
     </>
   );
 }

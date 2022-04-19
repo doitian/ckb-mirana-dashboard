@@ -45,7 +45,7 @@ function Details({
       The Mirana Upgrade epoch {formatNumber(targetEpoch)} is scheduled to occur
       on <strong>{targetDate.toLocaleString()}</strong> which is in
       <br />
-      <strong>{humanizeDuration(milliseconds)}</strong> <span>/</span>{" "}
+      <strong>{humanizeDuration(milliseconds)}</strong> <span className="mx-2">/</span>{" "}
       <strong>{formatNumber(floorPrecision(epochs, 10000))} epochs</strong> to
       go
     </p>
