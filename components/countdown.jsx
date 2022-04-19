@@ -16,9 +16,9 @@ function formatEpochs(number) {
   return `${formatNumber(intPart)}.${remaining}`;
 }
 
-function calculateTimeLeft(now, targetEpoch, tip) {
+function calculateTimeLeft(now, tip) {
   const epochsWhenFetch =
-    targetEpoch - tip.epochNumber - tip.epochBlockIndex / tip.epochLength;
+    tip.targetEpoch - tip.epochNumber - tip.epochBlockIndex / tip.epochLength;
   const elapsedTime = now - new Date(tip.fetchTime);
   const elapsedEpochs = elapsedTime / tip.estimatedEpochTime;
   const epochs = epochsWhenFetch - elapsedEpochs;
@@ -30,7 +30,7 @@ function calculateTimeLeft(now, targetEpoch, tip) {
     milliseconds,
     epochs,
     targetDate,
-    targetEpoch,
+    targetEpoch: tip.targetEpoch,
   };
 }
 
@@ -58,15 +58,15 @@ function Details({
   );
 }
 
-export default function Countdown({ targetEpoch, tip }) {
+export default function Countdown(tip) {
   const [timeLeft, setTimeLeft] = useState(
-    calculateTimeLeft(new Date(tip.fetchTime), targetEpoch, tip)
+    calculateTimeLeft(new Date(tip.fetchTime), tip)
   );
 
   useEffect(() => {
     if (timeLeft.milliseconds > 0) {
       const timer = setTimeout(() => {
-        setTimeLeft(calculateTimeLeft(new Date(), targetEpoch, tip));
+        setTimeLeft(calculateTimeLeft(new Date(), tip));
       }, 1000);
 
       return function clearTimer() {

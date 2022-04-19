@@ -3,12 +3,12 @@ import Countdown from "../components/countdown.jsx";
 import Main from "../components/main.jsx";
 import StatusMap from "../components/status-map.jsx";
 import FAQ from "../components/faq.jsx";
+import SWRComponent from "../components/swr-component.jsx";
 import { fetchTip } from "./api/tip.js";
 import { fetchMinerVersions, fetchNodes } from "./api/data.js";
 
 export default function Home({
   menu,
-  targetEpoch,
   tip,
   minerVersions,
   nodes,
@@ -18,9 +18,19 @@ export default function Home({
     <>
       <Nav menu={menu} />
       <section className="px-2">
-        <Countdown targetEpoch={targetEpoch} tip={tip} />
+        <SWRComponent
+          component={Countdown}
+          api="/api/tip"
+          fallbackData={tip}
+          refreshInterval={600000}
+        />
 
-        <Main minerVersions={minerVersions} nodes={nodes} />
+        <SWRComponent
+          component={Main}
+          api="/api/data"
+          fallbackData={{ minerVersions, nodes }}
+          refreshInterval={5000}
+        />
 
         <div className="max-w-screen-xl m-auto mb-20 grid grid-cols-2 gap-0 sm:gap-8 md:gap-16">
           <StatusMap statusMap={statusMap} />
@@ -44,36 +54,13 @@ export async function getServerSideProps(context) {
           href: "https://explorer.nervos.org/",
         },
       ],
-      targetEpoch: 5414,
 
+      // Ready, Not Ready, No Information
       statusMap: [
-        {
-          title: "Exchanges",
-          header: "Exchange",
-          data: [
-            { name: "Foo", status: "Ready" },
-            { name: "Bar", status: "No Information" },
-            { name: "Zoo", status: "Not Ready" },
-          ],
-        },
         {
           title: "Infrastructure Providers",
           header: "Exchange",
-          data: [
-            { name: "Explorer", status: "Ready" },
-            { name: "Foo", status: "Ready" },
-            { name: "Bar", status: "No Information" },
-            { name: "Zoo", status: "Not Ready" },
-          ],
-        },
-        {
-          title: "Miners",
-          header: "Miner",
-          data: [
-            { name: "Foo", status: "Ready" },
-            { name: "Bar", status: "No Information" },
-            { name: "Zoo", status: "Not Ready" },
-          ],
+          data: [{ name: "Explorer", status: "Ready" }],
         },
       ],
 

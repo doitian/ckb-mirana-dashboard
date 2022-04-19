@@ -3,6 +3,7 @@
 export async function fetchTip() {
   if (process && process.env.NODE_ENV == "development") {
     return {
+      targetEpoch: 5414,
       fetchTime: "2022-04-19T08:28:31.260Z",
       epochNumber: 5289,
       epochLength: 1032,
@@ -25,6 +26,7 @@ export async function fetchTip() {
     const stat = await statRes.json();
     const epoch_info = stat.data.attributes.epoch_info;
     return {
+      targetEpoch: 5414,
       fetchTime: new Date().toISOString(),
       epochNumber: parseInt(epoch_info.epoch_number, 10),
       epochLength: parseInt(epoch_info.epoch_length, 10),

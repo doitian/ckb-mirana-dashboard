@@ -23,34 +23,39 @@ function scrubNodes(nodes) {
 
   const parentOf = new Map();
   for (const node of nodes) {
-    for (let i = node.blocks.length; i > 0; --i) {
-      if (node.blocks[i - 1] !== undefined && node.blocks[i - 1] !== null) {
-        parentOf.set(node.blocks[i], node.blocks[i - 1]);
+    if (node.blocks.length > 0) {
+      for (let i = 0; i < node.blocks.length - 1; ++i) {
+        if (node.blocks[i + 1] !== undefined && node.blocks[i + 1] !== null) {
+          parentOf.set(node.blocks[i], node.blocks[i + 1]);
+        }
       }
     }
   }
 
   for (const node of nodes) {
-    if (node.blocks.length > 0) {
-      for (let i = node.blocks.length - 1; i >= 0; --i) {
-        if (node.blocks[i] === undefined || node.blocks[i] === null) {
-          node.blocks[i] = parentOf.get(node.blocks[i + 1]);
-        }
+    for (let i = 1; i < node.blocks.length; ++i) {
+      if (node.blocks[i] === undefined || node.blocks[i] === null) {
+        node.blocks[i] = parentOf.get(node.blocks[i - 1]);
       }
     }
   }
 }
 
 function findBestChain(nodes) {
+  // call twice to fill more missing blocks
   scrubNodes(nodes);
+  scrubNodes(nodes);
+
   // The first with the most common tip is the best
   const seen = new Map();
   for (let i = 0; i < nodes.length; ++i) {
     const tipHash = nodes[i].blocks[0];
-    if (seen.has(tipHash)) {
-      seen.get(tipHash).count += 1;
-    } else {
-      seen.set(tipHash, { first: i, count: 1 });
+    if (tipHash !== null && tipHash !== undefined) {
+      if (seen.has(tipHash)) {
+        seen.get(tipHash).count += 1;
+      } else {
+        seen.set(tipHash, { first: i, count: 1 });
+      }
     }
   }
 
