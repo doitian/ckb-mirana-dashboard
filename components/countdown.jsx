@@ -16,9 +16,9 @@ function formatEpochs(number) {
   return `${formatNumber(intPart)}.${remaining}`;
 }
 
-function calculateTimeLeft(now, tip) {
+function calculateTimeLeft(now, targetEpoch, tip) {
   const epochsWhenFetch =
-    tip.targetEpoch - tip.epochNumber - tip.epochBlockIndex / tip.epochLength;
+    targetEpoch - tip.epochNumber - tip.epochBlockIndex / tip.epochLength;
   const elapsedTime = now - new Date(tip.fetchTime);
   const elapsedEpochs = elapsedTime / tip.estimatedEpochTime;
   const epochs = epochsWhenFetch - elapsedEpochs;
@@ -30,7 +30,7 @@ function calculateTimeLeft(now, tip) {
     milliseconds,
     epochs,
     targetDate,
-    targetEpoch: tip.targetEpoch,
+    targetEpoch,
   };
 }
 
@@ -51,22 +51,22 @@ function Details({
       The Mirana Upgrade epoch {formatNumber(targetEpoch)} is scheduled to occur
       on <strong>{targetDate.toLocaleString()}</strong> which is in
       <br />
-      <strong>{humanizeDuration(milliseconds)}</strong> <span className="mx-2">/</span>{" "}
-      <strong>{formatEpochs(epochs)} epochs</strong> to
-      go
+      <strong>{humanizeDuration(milliseconds)}</strong>{" "}
+      <span className="mx-2">/</span>{" "}
+      <strong>{formatEpochs(epochs)} epochs</strong> to go
     </p>
   );
 }
 
-export default function Countdown({ tip }) {
+export default function Countdown({ targetEpoch, tip }) {
   const [timeLeft, setTimeLeft] = useState(
-    calculateTimeLeft(new Date(tip.fetchTime), tip)
+    calculateTimeLeft(new Date(tip.fetchTime), targetEpoch, tip)
   );
 
   useEffect(() => {
     if (timeLeft.milliseconds > 0) {
       const timer = setTimeout(() => {
-        setTimeLeft(calculateTimeLeft(new Date(), tip));
+        setTimeLeft(calculateTimeLeft(new Date(), targetEpoch, tip));
       }, 1000);
 
       return function clearTimer() {

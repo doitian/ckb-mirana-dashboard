@@ -1,18 +1,19 @@
 import Nav from "../components/nav.jsx";
 import Countdown from "../components/countdown.jsx";
+import { fetchTip } from "./api/tip.js";
 
-export default function Home({ menu, tip }) {
+export default function Home({ menu, targetEpoch, tip }) {
   return (
     <>
       <Nav menu={menu} />
       <section className="px-2">
-        <Countdown tip={tip} />
+        <Countdown targetEpoch={targetEpoch} tip={tip} />
       </section>
     </>
   );
 }
 
-export function getStaticProps() {
+export async function getServerSideProps(context) {
   return {
     props: {
       menu: [
@@ -25,15 +26,8 @@ export function getStaticProps() {
           href: "https://explorer.nervos.org/",
         },
       ],
-      tip: {
-        targetEpoch: 5414,
-        fetchTime: "2022-04-19T08:28:31.260Z",
-        epochNumber: 5289,
-        epochLength: 1032,
-        epochBlockIndex: 693,
-        estimatedEpochTime: 14731248,
-      },
+      targetEpoch: 5414,
+      tip: await fetchTip(),
     },
-    revalidate: 10,
   };
 }
