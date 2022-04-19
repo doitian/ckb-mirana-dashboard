@@ -29,7 +29,7 @@ export async function fetchTip() {
       epochNumber: parseInt(epoch_info.epoch_number, 10),
       epochLength: parseInt(epoch_info.epoch_length, 10),
       epochBlockIndex: parseInt(epoch_info.index, 10),
-      estimatedEpochTime: parseInt(stat.data.estimated_epoch_time, 10),
+      estimatedEpochTime: parseInt(stat.data.attributes.estimated_epoch_time, 10),
     };
   }
 
