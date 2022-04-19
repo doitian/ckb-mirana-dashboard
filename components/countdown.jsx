@@ -6,8 +6,14 @@ function formatNumber(number) {
   return formatThousands(number, { separator: "," });
 }
 
-function floorPrecision(number, precision) {
-  return Math.floor(number * precision) / precision;
+function formatEpochs(number) {
+  const intPart = Math.floor(number);
+  let remaining = Math.floor((number - intPart) * 10000);
+  if (remaining >= 10000) {
+    remaining = 9999;
+  }
+
+  return `${formatNumber(intPart)}.${remaining}`;
 }
 
 function calculateTimeLeft(now, tip) {
@@ -46,7 +52,7 @@ function Details({
       on <strong>{targetDate.toLocaleString()}</strong> which is in
       <br />
       <strong>{humanizeDuration(milliseconds)}</strong> <span className="mx-2">/</span>{" "}
-      <strong>{formatNumber(floorPrecision(epochs, 10000))} epochs</strong> to
+      <strong>{formatEpochs(epochs)} epochs</strong> to
       go
     </p>
   );
