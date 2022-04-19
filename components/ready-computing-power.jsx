@@ -57,8 +57,8 @@ function LineChart({ className, minerVersions }) {
         ticks: {
           callback: (i) => {
             const label = labels[i];
-            return label.endsWith('00:00') ? label.split(' ')[0] : ''
-          }
+            return label.endsWith("00:00") ? label.split(" ")[0] : "";
+          },
         },
       },
     },

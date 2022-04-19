@@ -61,7 +61,7 @@ export async function fetchNodes() {
     respData.data.result[0].metric.last_blocknumber,
     10
   );
-  const nodes = new Map();
+  const nodesMap = new Map();
   for (const entry of respData.data.result) {
     const metric = entry.metric;
     const nodeName = NAME_OF_NODE[metric.node_location];
@@ -72,16 +72,23 @@ export async function fetchNodes() {
     }
 
     if (nodeName !== undefined) {
-      if (!nodes.has(nodeName)) {
-        nodes.set(nodeName, []);
+      if (!nodesMap.has(nodeName)) {
+        nodesMap.set(nodeName, []);
       }
-      nodes.get(nodeName)[index] = metric.last_block_hash.substr(2, 5);
+      nodesMap.get(nodeName)[index] = metric.last_block_hash.substr(2, 5);
     }
   }
 
+  const nodes = Array.from(nodesMap, ([name, blocks]) => ({
+    name,
+    blocks,
+  })).sort((a, b) => {
+    a.name < b.name ? -1 : 1;
+  });
+
   return {
     lastNumber,
-    nodes: Array.from(nodes, ([name, blocks]) => ({ name, blocks })),
+    nodes,
   };
 }
 
