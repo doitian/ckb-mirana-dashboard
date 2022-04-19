@@ -65,7 +65,7 @@ function findBestChain(nodes) {
   return nodes[bestIndex];
 }
 
-const CELL_STYLES = "p-3";
+const CELL_STYLES = "text-sm sm:text-base p-1 sm:p-3";
 
 function BlockCell({ hash, isBest }) {
   if (hash !== undefined && hash !== null) {

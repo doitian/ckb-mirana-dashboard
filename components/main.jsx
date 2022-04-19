@@ -6,7 +6,9 @@ export default function Main({ minerVersions, nodes }) {
   return (
     <div className="shadow-lg rounded-2xl bg-white max-w-screen-xl m-auto p-8 mb-20">
       <ReadyComputingPower minerVersions={minerVersions} />
-      <NodesTable nodes={nodes} />
+      <div className="overflow-x-scroll sm:overflow-x-clip">
+        <NodesTable nodes={nodes} />
+      </div>
     </div>
   );
 }
