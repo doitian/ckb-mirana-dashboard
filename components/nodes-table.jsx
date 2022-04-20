@@ -6,7 +6,8 @@ function formatBlockNumber(number) {
 
 function shouldScrubNodes(nodes) {
   for (const node of nodes) {
-    for (const hash of node.blocks) {
+    for (let i = 0; i < 5; ++i) {
+      const hash = node.blocks[i];
       if (hash == undefined || hash == null) {
         return true;
       }
@@ -14,6 +15,10 @@ function shouldScrubNodes(nodes) {
   }
 
   return false;
+}
+
+function isPresent(v) {
+  return v !== undefined && v !== null;
 }
 
 function scrubNodes(nodes) {
@@ -25,25 +30,46 @@ function scrubNodes(nodes) {
   for (const node of nodes) {
     if (node.blocks.length > 0) {
       for (let i = 0; i < node.blocks.length - 1; ++i) {
-        if (node.blocks[i + 1] !== undefined && node.blocks[i + 1] !== null) {
-          parentOf.set(node.blocks[i], node.blocks[i + 1]);
+        const hash = node.blocks[i];
+        const parent = node.blocks[i + 1];
+        if (isPresent(hash) && isPresent(parent)) {
+          parentOf.set(hash, parent);
         }
       }
     }
   }
 
-  for (const node of nodes) {
-    for (let i = 1; i < node.blocks.length; ++i) {
-      if (node.blocks[i] === undefined || node.blocks[i] === null) {
-        node.blocks[i] = parentOf.get(node.blocks[i - 1]);
+  let completed = false;
+  let changed = true;
+
+  while (changed && !completed) {
+    changed = false;
+    completed = true;
+
+    for (const node of nodes) {
+      for (let i = 1; i < 5; ++i) {
+        const hash = node.blocks[i];
+        if (!isPresent(hash)) {
+          const child = node.blocks[i - 1];
+          const childParent = parentOf.get(child);
+          if (isPresent(childParent)) {
+            node.blocks[i] = childParent;
+            // Check whether we learned new knowledge
+            if (i + 1 < node.blocks.length && isPresent(node.blocks[i + 1])) {
+              changed = true;
+              parentOf.set(node.blocks[i], node.blocks[i + 1]);
+            }
+          } else {
+            // otherwise, we still have something to do
+            completed = false;
+          }
+        }
       }
     }
   }
 }
 
 function findBestChain(nodes) {
-  // call twice to fill more missing blocks
-  scrubNodes(nodes);
   scrubNodes(nodes);
 
   // The first with the most common tip is the best
@@ -59,9 +85,11 @@ function findBestChain(nodes) {
     }
   }
 
-  const bestIndex = Array.from(seen.values()).sort(
+  const sortedByCount = Array.from(seen.values()).sort(
     (a, b) => b.count - a.count
-  )[0].first;
+  );
+
+  const bestIndex = sortedByCount.length > 0 ? sortedByCount[0].first : 0;
   return nodes[bestIndex];
 }
 
@@ -70,7 +98,11 @@ const CELL_STYLES = "text-sm sm:text-base p-1 sm:p-3";
 function BlockCell({ hash, isBest }) {
   if (hash !== undefined && hash !== null) {
     const bg = isBest ? "bg-[#00CC9BE6]" : "bg-[#FF5E5EE6]";
-    return <td className={`${bg} text-white border border-white ${CELL_STYLES}`}>{hash}</td>;
+    return (
+      <td className={`${bg} text-white border border-white ${CELL_STYLES}`}>
+        {hash}
+      </td>
+    );
   }
 
   return <td className={CELL_STYLES}>&nbsp;</td>;
@@ -94,7 +126,9 @@ export default function NodesTable({ nodes: { lastNumber, nodes } }) {
       <tbody>
         {nodes.map((node) => (
           <tr key={node.name}>
-            <th className={`${CELL_STYLES} border-t border-slate-100`}>{node.name}</th>
+            <th className={`${CELL_STYLES} border-t border-slate-100`}>
+              {node.name}
+            </th>
             <BlockCell
               hash={node.blocks[0]}
               isBest={node.blocks[0] == best.blocks[0]}
