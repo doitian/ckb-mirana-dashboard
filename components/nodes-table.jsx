@@ -75,9 +75,11 @@ function findBestChain(nodes) {
     }
   }
 
-  const bestIndex = Array.from(seen.values()).sort(
+  const sortedByCount = Array.from(seen.values()).sort(
     (a, b) => b.count - a.count
-  )[0].first;
+  );
+
+  const bestIndex = sortedByCount.length > 0 ? sortedByCount[0].first : 0;
   return nodes[bestIndex];
 }
 
