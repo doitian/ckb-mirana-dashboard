@@ -4,13 +4,9 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function SWRComponent({
   api,
-  fallbackData,
-  refreshInterval,
+  swrOptions,
   component,
 }) {
-  const { data, error } = useSWR(api, fetcher, {
-    fallbackData,
-    refreshInterval,
-  });
-  return component(data || fallbackData);
+  const { data, error } = useSWR(api, fetcher, swrOptions);
+  return component(data || swrOptions.fallbackData);
 }

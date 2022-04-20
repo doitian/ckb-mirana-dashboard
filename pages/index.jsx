@@ -7,13 +7,7 @@ import SWRComponent from "../components/swr-component.jsx";
 import { fetchTip } from "./api/tip.js";
 import { fetchMinerVersions, fetchNodes } from "./api/data.js";
 
-export default function Home({
-  menu,
-  tip,
-  minerVersions,
-  nodes,
-  statusMap,
-}) {
+export default function Home({ menu, tip, minerVersions, nodes, statusMap }) {
   return (
     <>
       <Nav menu={menu} />
@@ -21,15 +15,21 @@ export default function Home({
         <SWRComponent
           component={Countdown}
           api="/api/tip"
-          fallbackData={tip}
-          refreshInterval={600000}
+          swrOptions={{
+            fallbackData: tip,
+            refreshInterval: 600000,
+            revalidateOnMount: false,
+          }}
         />
 
         <SWRComponent
           component={Main}
           api="/api/data"
-          fallbackData={{ minerVersions, nodes }}
-          refreshInterval={5000}
+          swrOptions={{
+            fallbackData: { minerVersions, nodes },
+            refreshInterval: 5000,
+            revalidateOnMount: false,
+          }}
         />
 
         <div className="max-w-screen-xl m-auto mb-20 grid grid-cols-2 gap-0 sm:gap-8 md:gap-16">
