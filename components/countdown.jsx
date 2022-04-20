@@ -16,7 +16,9 @@ function formatEpochs(number) {
   return `${formatNumber(intPart)}.${remaining}`;
 }
 
-function calculateTimeLeft(now, tip) {
+function calculateTimeLeft(tip, determinedCalculation) {
+  const now = determinedCalculation ? new Date(tip.fetchTime) : new Date();
+
   const epochsWhenFetch =
     tip.targetEpoch - tip.epochNumber - tip.epochBlockIndex / tip.epochLength;
   const elapsedTime = now - new Date(tip.fetchTime);
@@ -31,6 +33,7 @@ function calculateTimeLeft(now, tip) {
     epochs,
     targetDate,
     targetEpoch: tip.targetEpoch,
+    useUTCTime: determinedCalculation,
   };
 }
 
@@ -44,12 +47,11 @@ function Root({ title, children }) {
 }
 
 function Details({
-  timeLeft: { targetEpoch, targetDate, epochs, milliseconds },
-  useLocalTime,
+  timeLeft: { targetEpoch, targetDate, epochs, milliseconds, useUTCTime },
 }) {
-  const targetDateDisplay = useLocalTime
-    ? targetDate.toLocaleString()
-    : targetDate.toUTCString();
+  const targetDateDisplay = useUTCTime
+    ? targetDate.toUTCString()
+    : targetDate.toLocaleString();
 
   return (
     <p className="leading-8">
@@ -63,17 +65,12 @@ function Details({
 }
 
 export default function Countdown(tip) {
-  const [timeLeft, setTimeLeft] = useState(
-    calculateTimeLeft(new Date(tip.fetchTime), tip)
-  );
-  const [useLocalTime, setUseLocalTime] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(tip, true));
 
   useEffect(() => {
-    setUseLocalTime(true);
-
     if (timeLeft.milliseconds > 0) {
       const timer = setTimeout(() => {
-        setTimeLeft(calculateTimeLeft(new Date(), tip));
+        setTimeLeft(calculateTimeLeft(tip, false));
       }, 1000);
 
       return function clearTimer() {
@@ -85,7 +82,7 @@ export default function Countdown(tip) {
   if (timeLeft.milliseconds > 0) {
     return (
       <Root title="CKB Mirana Upgrade Countdown">
-        <Details timeLeft={timeLeft} useLocalTime={useLocalTime} />
+        <Details timeLeft={timeLeft} />
       </Root>
     );
   }
