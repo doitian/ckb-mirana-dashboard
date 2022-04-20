@@ -10,7 +10,7 @@ export default function FAQ({ targetEpoch }) {
       <h2 className="text-2xl text-slate-500 mb-4">FAQ</h2>
 
       <dl>
-        <dt className={DT_STYLES}>Why does the Luanch Date Keep Changing?</dt>
+        <dt className={DT_STYLES}>Why does the Launch Date Keep Changing?</dt>
         <dd className={DD_STYLES}>
           It is a best guess by assuming that each epoch takes 4 hours.
         </dd>
