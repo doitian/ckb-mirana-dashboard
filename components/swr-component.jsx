@@ -7,6 +7,6 @@ export default function SWRComponent({
   swrOptions,
   component,
 }) {
-  const { data, error } = useSWR(api, fetcher, swrOptions);
+  const { data } = useSWR(api, fetcher, swrOptions);
   return component(data || swrOptions.fallbackData);
 }
