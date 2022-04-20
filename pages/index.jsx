@@ -4,33 +4,32 @@ import Main from "../components/main.jsx";
 import StatusMap from "../components/status-map.jsx";
 import FAQ from "../components/faq.jsx";
 import SWRComponent from "../components/swr-component.jsx";
+import { SWRConfig } from "swr";
 import { fetchTip } from "./api/tip.js";
 import { fetchMinerVersions, fetchNodes } from "./api/data.js";
 
-export default function Home({ menu, tip, minerVersions, nodes, statusMap }) {
+export default function Home({ menu, statusMap, fallback }) {
   return (
     <>
       <Nav menu={menu} />
       <section className="px-2">
-        <SWRComponent
-          component={Countdown}
-          api="/api/tip"
-          swrOptions={{
-            fallbackData: tip,
-            refreshInterval: 600000,
-            revalidateOnMount: false,
-          }}
-        />
-
-        <SWRComponent
-          component={Main}
-          api="/api/data"
-          swrOptions={{
-            fallbackData: { minerVersions, nodes },
+        <SWRConfig
+          value={{
+            fallback,
             refreshInterval: 5000,
             revalidateOnMount: false,
           }}
-        />
+        >
+          <SWRComponent
+            component={Countdown}
+            api="/api/tip"
+            swrOptions={{
+              refreshInterval: 600000,
+            }}
+          />
+
+          <SWRComponent component={Main} api="/api/data" />
+        </SWRConfig>
 
         <div className="max-w-screen-xl m-auto mb-20 grid grid-cols-2 gap-0 sm:gap-8 md:gap-16">
           <StatusMap statusMap={statusMap} />
@@ -41,7 +40,7 @@ export default function Home({ menu, tip, minerVersions, nodes, statusMap }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   return {
     props: {
       menu: [
@@ -64,9 +63,13 @@ export async function getServerSideProps(context) {
         },
       ],
 
-      tip: await fetchTip(),
-      minerVersions: await fetchMinerVersions(),
-      nodes: await fetchNodes(),
+      fallback: {
+        "/api/tip": await fetchTip(),
+        "/api/data": {
+          minerVersions: await fetchMinerVersions(),
+          nodes: await fetchNodes(),
+        },
+      },
     },
   };
 }
