@@ -45,14 +45,18 @@ function Root({ title, children }) {
 
 function Details({
   timeLeft: { targetEpoch, targetDate, epochs, milliseconds },
+  useLocalTime,
 }) {
+  const targetDateDisplay = useLocalTime
+    ? targetDate.toLocaleString()
+    : targetDate.toUTCString();
+
   return (
     <p className="leading-8">
       The Mirana Upgrade epoch {formatNumber(targetEpoch)} is scheduled to occur
-      on <strong>{targetDate.toLocaleString()}</strong> which is in
-      <br />
-      <strong>{humanizeDuration(milliseconds)}</strong>{" "}
-      <span className="mx-2">/</span>{" "}
+      on <strong>{targetDateDisplay}</strong> which is in <br />
+      <strong>{humanizeDuration(milliseconds)}</strong>
+      <span className="mx-2"> / </span>
       <strong>{formatEpochs(epochs)} epochs</strong> to go
     </p>
   );
@@ -62,8 +66,11 @@ export default function Countdown(tip) {
   const [timeLeft, setTimeLeft] = useState(
     calculateTimeLeft(new Date(tip.fetchTime), tip)
   );
+  const [useLocalTime, setUseLocalTime] = useState(false);
 
   useEffect(() => {
+    setUseLocalTime(true);
+
     if (timeLeft.milliseconds > 0) {
       const timer = setTimeout(() => {
         setTimeLeft(calculateTimeLeft(new Date(), tip));
@@ -78,7 +85,7 @@ export default function Countdown(tip) {
   if (timeLeft.milliseconds > 0) {
     return (
       <Root title="CKB Mirana Upgrade Countdown">
-        <Details timeLeft={timeLeft} />
+        <Details timeLeft={timeLeft} useLocalTime={useLocalTime} />
       </Root>
     );
   }
