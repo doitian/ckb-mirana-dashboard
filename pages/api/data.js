@@ -59,12 +59,15 @@ export async function fetchNodes() {
     throw new Exception(`${respData.errorType}: ${respData.error}`);
   }
 
+  const filteredResult = respData.data.result.filter(
+    (e) => e.metric.node_location in NAME_OF_NODE
+  );
   const lastNumber = Math.max(
-    ...respData.data.result.map((e) => parseInt(e.metric.last_blocknumber, 10))
+    ...filteredResult.map((e) => parseInt(e.metric.last_blocknumber, 10))
   );
 
   const nodesMap = new Map();
-  for (const entry of respData.data.result) {
+  for (const entry of filteredResult) {
     const metric = entry.metric;
     const nodeName = NAME_OF_NODE[metric.node_location];
     const index = lastNumber - parseInt(metric.last_blocknumber, 10);
