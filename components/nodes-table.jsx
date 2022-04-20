@@ -32,18 +32,34 @@ function scrubNodes(nodes) {
     }
   }
 
-  for (const node of nodes) {
-    for (let i = 1; i < node.blocks.length; ++i) {
-      if (node.blocks[i] === undefined || node.blocks[i] === null) {
-        node.blocks[i] = parentOf.get(node.blocks[i - 1]);
+  let completed = false
+  let changed = true
+
+  while (changed && !completed) {
+    changed = false;
+    completed = true;
+
+    for (const node of nodes) {
+      for (let i = 1; i < 5; ++i) {
+        if (node.blocks[i] === undefined || node.blocks[i] === null) {
+          const parent = parentOf.get(node.blocks[i - 1]);
+          if (parent !== undefined && parent !== null) {
+            node.blocks[i] = parent;
+            changed = true;
+            if (i + 1 < node.blocks.length && node.blocks[i + 1] !== undefined && node.blocks[i + 1] !== null) {
+              parentOf.set(node.blocks[i], node.blocks[i + 1]);
+            }
+          } else {
+            // otherwise, we still have something to do
+            completed = false;
+          }
+        }
       }
     }
   }
 }
 
 function findBestChain(nodes) {
-  // call twice to fill more missing blocks
-  scrubNodes(nodes);
   scrubNodes(nodes);
 
   // The first with the most common tip is the best
