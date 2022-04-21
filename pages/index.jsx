@@ -1,16 +1,27 @@
+import { SWRConfig } from "swr";
+import Head from "next/head";
+
+import { fetchTip } from "./api/tip.js";
+import { fetchMinerVersions, fetchNodes } from "./api/data.js";
+
 import Nav from "../components/nav.jsx";
 import Countdown from "../components/countdown.jsx";
 import Main from "../components/main.jsx";
 import StatusMap from "../components/status-map.jsx";
 import FAQ from "../components/faq.jsx";
 import SWRComponent from "../components/swr-component.jsx";
-import { SWRConfig } from "swr";
-import { fetchTip } from "./api/tip.js";
-import { fetchMinerVersions, fetchNodes } from "./api/data.js";
 
 export default function Home({ menu, statusMap, fallback }) {
   return (
     <>
+      <Head>
+        <title>CKB Mirana Dashboard</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="CKB Mainnet Hardfork Mirana Countdown and Monitoring."
+        />
+      </Head>
       <Nav menu={menu} />
       <section className="px-2">
         <SWRConfig
