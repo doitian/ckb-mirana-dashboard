@@ -1,5 +1,4 @@
 import { SWRConfig } from "swr";
-import Head from "next/head";
 
 import { fetchTip } from "./api/tip.js";
 import { fetchMinerVersions, fetchNodes } from "./api/data.js";
@@ -14,14 +13,6 @@ import SWRComponent from "../components/swr-component.jsx";
 export default function Home({ menu, statusMap, fallback }) {
   return (
     <>
-      <Head>
-        <title>CKB Mirana Dashboard</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta
-          name="description"
-          content="CKB Mainnet Hardfork Mirana Countdown and Monitoring."
-        />
-      </Head>
       <Nav menu={menu} />
       <section className="px-2">
         <SWRConfig
