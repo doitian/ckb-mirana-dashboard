@@ -81,7 +81,7 @@ function PieChart({ className, minerVersions }) {
   }
 
   const readyPercent = Math.floor((sum.ready / sum.total) * 10000) / 100;
-  const unreadyPercent = 100 - readyPercent;
+  const unreadyPercent = Math.floor((100 - readyPercent) * 100) / 100;
 
   const data = {
     labels: [`Ready (${readyPercent}%)`, `Not Ready (${unreadyPercent}%)`],
