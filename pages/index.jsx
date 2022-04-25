@@ -19,7 +19,6 @@ export default function Home({ menu, statusMap, fallback }) {
           value={{
             fallback,
             refreshInterval: 5000,
-            revalidateOnMount: false,
           }}
         >
           <SWRComponent
